@@ -1,8 +1,12 @@
 package com.lin.mimo360.t_bone;
 
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +17,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        settoolbar();
+    }
+
+    private void settoolbar() {
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toobar);
+        setSupportActionBar(toolbar);
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer);
+        ActionBarDrawerToggle toggle1 = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.open,R.string.close);
+        toggle1.syncState();
+        drawer.setDrawerListener(toggle1);
+
     }
 
     @Override

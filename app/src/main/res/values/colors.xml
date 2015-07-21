@@ -3,7 +3,7 @@
     <!-- 背景色 -->
     <color name="window_background">#ffffff</color>
     <!--ActionBar -->
-    <color name="colorPrimary">#ED1C24</color>
+    <color name="colorPrimary">#FF8888</color>
     <!-- 狀態列 -->
     <color name="colorPrimaryDark">#CC0000</color>
     <!-- 標題文字 -->
