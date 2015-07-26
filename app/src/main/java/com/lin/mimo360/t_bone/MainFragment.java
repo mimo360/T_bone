@@ -47,15 +47,17 @@ public class MainFragment extends Fragment {
 
     private void setRV() {
         rv = (RecyclerView) getView().findViewById(R.id.recyclerview);
+       //rv.addItemDecoration();
         lm = new StaggeredGridLayoutManager(2,1);
+
         //lm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(lm);
-        myAdapter = new MyAdapter(list);
+        myAdapter = new MyAdapter(getActivity(),list);
         rv.setAdapter(myAdapter);
     }
 
     private void test() {
-        for(int i=0; i<50; i++){
+        for(int i=0; i<12; i++){
             list.add(""+i);
         }
     }

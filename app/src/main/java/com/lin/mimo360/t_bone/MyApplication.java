@@ -1,3 +1,5 @@
+package com.lin.mimo360.t_bone;
+
 import android.app.Application;
 
 import com.parse.Parse;
@@ -10,7 +12,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Parse.initialize(this,"v5Q8S4HAzG55jr612w9q6vphtWVh28uM8Ll1fdwi","vpswxujLmyZYOUKa08EUC3GdZprN0VrVD8ICWVTP");
+        Parse.initialize(this,"ilQVgYAHNJohPs9JDJq7ERWJj6vQFe2ASvBRvkSL","J8QFDWCyeCZqWeUsvwUzmenoQrIaj95QFDbQSFNT");
 
     }
 }

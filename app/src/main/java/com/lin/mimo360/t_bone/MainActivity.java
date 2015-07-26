@@ -1,7 +1,9 @@
 package com.lin.mimo360.t_bone;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,27 +26,63 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 FloatingActionButton fab;
     TabLayout tab;
-    private  MainFragment mf = null;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    private MainFragment mf = null;
+    private AboutFragment af = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         settoolbar();
-        setFragment();
-
+        mf =new MainFragment();
+        setFragment(mf);
+        setnavigation();
+        //test();
        //setupFab();
        // setTab();
     }
 
+    private void setnavigation() {
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+        navigationView = (NavigationView)findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            MenuItem premenuItem;
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                if (premenuItem != null){
+                    premenuItem.setChecked(false);
+                }
+                menuItem.setChecked(true);
+                drawerLayout.closeDrawers();
+                premenuItem = menuItem;
+                switch (menuItem.getItemId()){
+                    case R.id.navigation_item_1:
+                        break;
+                    case R.id.navigation_item_2:
+                        break;
+                    case R.id.navigation_item_3:
+                        af = new AboutFragment();
+                        setFragment(af);
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    private void test() {
+        ParseObject parseObject = new ParseObject("test");
+        parseObject.put("ADD","test");
+        parseObject.saveInBackground();
+    }
 
 
-
-    private void setFragment() {
+    private void setFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-         mf =new MainFragment();
-        ft.add(R.id.flay,mf,"MainFragment");
+        ft.add(R.id.flay,fragment,"MainFragment");
         ft.addToBackStack(null);
         ft.commit();
 
