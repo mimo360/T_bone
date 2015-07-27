@@ -24,10 +24,12 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-FloatingActionButton fab;
-    TabLayout tab;
+    //FloatingActionButton fab;
+    // TabLayout tab;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    FragmentManager fragmentManager;
+
     private MainFragment mf = null;
     private AboutFragment af = null;
 
@@ -59,12 +61,18 @@ FloatingActionButton fab;
                 premenuItem = menuItem;
                 switch (menuItem.getItemId()){
                     case R.id.navigation_item_1:
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.flay,mf)
+                                .commit();
                         break;
                     case R.id.navigation_item_2:
                         break;
                     case R.id.navigation_item_3:
                         af = new AboutFragment();
-                        setFragment(af);
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.flay,af,"AboutFragment")
+                                .addToBackStack(null)
+                                .commit();
                         break;
                 }
                 return true;
@@ -80,10 +88,9 @@ FloatingActionButton fab;
 
 
     private void setFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.add(R.id.flay,fragment,"MainFragment");
-        ft.addToBackStack(null);
         ft.commit();
 
     }
