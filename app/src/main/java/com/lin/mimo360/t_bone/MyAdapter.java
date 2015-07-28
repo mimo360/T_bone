@@ -1,10 +1,12 @@
 package com.lin.mimo360.t_bone;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,9 +17,11 @@ import java.util.List;
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     Context context;
-    TextView textView;
+    //TextView textView;
+   // ImageView imageView;
     List<String> list;
     List<Integer> heights;
+
     public MyAdapter(Context context, List list) {
         this.context = context;
         this.list = list;
@@ -26,7 +30,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     private void getRandomHeight(List<String> list){
         heights = new ArrayList<>();
         for (int i=0; i<=list.size(); i++){
-            heights.add((int)(300+Math.random()*170));
+            heights.add((int)(400+Math.random()*150));
         }
 
 
@@ -44,6 +48,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
         ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
         params.height = heights.get(position);
         vh.itemView.setLayoutParams(params);
+
+       //vh.imageView.setLayoutParams(params);
         vh.textView.setText(list.get(position));
     }
 
@@ -54,10 +60,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
 
     public static class ViewHoider extends RecyclerView.ViewHolder{
         private  TextView textView;
-
+        private ImageView imageView;
         public ViewHoider(View view){
             super(view);
             textView = (TextView)view.findViewById(R.id.item1);
+            //imageView = (ImageView)view.findViewById(R.id.image);
 
         }
     }
