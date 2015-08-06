@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:design:22.2.0'
     compile fileTree(include: 'Parse-*.jar', dir: 'libs')
+    compile files('libs/allpaymobilesdk.jar')
 }
