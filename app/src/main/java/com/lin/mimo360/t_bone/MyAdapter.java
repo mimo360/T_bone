@@ -1,13 +1,22 @@
 package com.lin.mimo360.t_bone;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +30,37 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
    // ImageView imageView;
     List<String> list;
     List<Integer> heights;
+    List<ParseObject> parseObjectList;
+    List<Bitmap> bitmapList;
 
-    public MyAdapter(Context context, List list) {
+
+    public MyAdapter(Context context, List<ParseObject> parseObjectList) {
         this.context = context;
-        this.list = list;
-        getRandomHeight(this.list);
+        this.parseObjectList = parseObjectList;
+        getRandomHeight(this.parseObjectList);
+        //gBitmap();
     }
-    private void getRandomHeight(List<String> list){
+    private void getRandomHeight(List<ParseObject> parseObjectList){
         heights = new ArrayList<>();
-        for (int i=0; i<=list.size(); i++){
+        for (int i=0; i<=parseObjectList.size(); i++){
             heights.add((int)(400+Math.random()*150));
         }
-
-
     }
 
+    public void gBitmap(){
+
+        for (int i=0 ; i<=parseObjectList.size(); i++) {
+            ParseFile parseFile= (ParseFile)parseObjectList.get(i).get("image01");
+            parseFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, ParseException e) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    bitmapList.add(bitmap);
+                }
+            });
+        }
+
+    }
     @Override
     public ViewHoider onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_item,parent,false);
@@ -44,18 +69,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHoider vh, int position) {
+    public void onBindViewHolder(final ViewHoider vh, int position) {
+
         ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
         params.height = heights.get(position);
         vh.itemView.setLayoutParams(params);
+        vh.textView.setText(parseObjectList.get(position).getString("name"));
 
-       //vh.imageView.setLayoutParams(params);
-        vh.textView.setText(list.get(position));
+
+
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return parseObjectList.size();
     }
 
     public static class ViewHoider extends RecyclerView.ViewHolder{
@@ -64,7 +91,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
         public ViewHoider(View view){
             super(view);
             textView = (TextView)view.findViewById(R.id.item1);
-            //imageView = (ImageView)view.findViewById(R.id.image);
+            //imageView = (ImageView)view.findViewById(R.id.icon);
 
         }
     }

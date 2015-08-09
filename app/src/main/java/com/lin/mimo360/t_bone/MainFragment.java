@@ -33,18 +33,19 @@ public class MainFragment extends Fragment {
     RecyclerView.LayoutManager lm= null;
     List<ParseObject> todos = new ArrayList<>();
     List<String> strmenuList = new ArrayList<>();
-    List<ParseFile> fileList = new ArrayList<>();
+
 
 
     public MainFragment() {
+
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new task().execute();
-        test();
+       // new task().execute();
+       // test();
 
         // parseQuery();
         //test();
@@ -61,8 +62,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        setRV();
+       // setRV();
 
     }
 
@@ -70,11 +70,9 @@ public class MainFragment extends Fragment {
         rv = (RecyclerView) getView().findViewById(R.id.recyclerview);
        //rv.addItemDecoration();
         lm = new StaggeredGridLayoutManager(2,1);
-
         //lm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(lm);
-
-        myAdapter = new MyAdapter(getActivity(),strmenuList);
+        myAdapter = new MyAdapter(getActivity(),MyApplication.todos);
         rv.setAdapter(myAdapter);
     }
 
@@ -85,19 +83,12 @@ public class MainFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object[] params) {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("menuitem");
-            try {
-                todos = query.find();
 
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } finally {
-            }
-            strmenuList.clear();
-            for (ParseObject todo : todos){
-                strmenuList.add(todo.getString("name"));
-                fileList.add(todo.getParseFile("image01"));
-            }
+//            strmenuList.clear();
+//            for (ParseObject todo : todos){
+//                strmenuList.add(todo.getString("name"));
+//                fileList.add(todo.getParseFile("image01"));
+//            }
 
            return null;
         }
@@ -107,7 +98,7 @@ public class MainFragment extends Fragment {
             super.onPostExecute(o);
 //            myAdapter = new MyAdapter(getActivity(),strmenuList);
 //            rv.setAdapter(myAdapter);
-            myAdapter.notifyDataSetChanged();
+           //myAdapter.notifyDataSetChanged();
         }
     }
 
