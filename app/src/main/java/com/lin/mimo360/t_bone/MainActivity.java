@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         mf =new MainFragment();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.flay, mf)
+                                .addToBackStack(null)
                                 .commit();
                         break;
                     case R.id.navigation_item_2:

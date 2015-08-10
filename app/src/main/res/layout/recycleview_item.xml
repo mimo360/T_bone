@@ -10,7 +10,7 @@
     card_view:cardElevation="4dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:layout_margin="3dp"
+    android:layout_margin="4dp"
     card_view:cardCornerRadius="4dp">
 
     <LinearLayout
@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <com.ImageView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"

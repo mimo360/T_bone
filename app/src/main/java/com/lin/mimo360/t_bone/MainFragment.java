@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -30,9 +31,10 @@ import java.util.List;
 public class MainFragment extends Fragment {
     RecyclerView rv ;
     MyAdapter myAdapter;
-    RecyclerView.LayoutManager lm= null;
+    RecyclerView.LayoutManager lm;
     List<ParseObject> todos = new ArrayList<>();
-    List<String> strmenuList = new ArrayList<>();
+    List<String> strlist = new ArrayList<>();
+
 
 
 
@@ -44,17 +46,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // new task().execute();
-       // test();
 
-        // parseQuery();
-        //test();
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_main, container, false);
 
     }
@@ -62,49 +62,33 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       // setRV();
+        rv = (RecyclerView)getView().findViewById(R.id.recycleview);
+        lm = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        rv.setLayoutManager(lm);
+        setdata();
+        myAdapter = new MyAdapter(getActivity(),todos);
+        rv.setAdapter(myAdapter);
+
 
     }
 
         private void setRV() {
-        rv = (RecyclerView) getView().findViewById(R.id.recyclerview);
-       //rv.addItemDecoration();
+        rv = (RecyclerView) getActivity().findViewById(R.id.recycleview);
         lm = new StaggeredGridLayoutManager(2,1);
         //lm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(lm);
-        myAdapter = new MyAdapter(getActivity(),MyApplication.todos);
+            //setdata();
+        myAdapter = new MyAdapter(getActivity(),todos);
         rv.setAdapter(myAdapter);
     }
 
-
-
-
-    public class task extends AsyncTask{
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-
-//            strmenuList.clear();
-//            for (ParseObject todo : todos){
-//                strmenuList.add(todo.getString("name"));
-//                fileList.add(todo.getParseFile("image01"));
-//            }
-
-           return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-//            myAdapter = new MyAdapter(getActivity(),strmenuList);
-//            rv.setAdapter(myAdapter);
-           //myAdapter.notifyDataSetChanged();
+    private void setdata() {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
+        try {
+            todos = parseQuery.find();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
-    private void test(){
-        for (int i= 0 ;i<=5; i++){
-            strmenuList.add("");
-        }
-    }
 }
