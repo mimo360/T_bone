@@ -1,6 +1,7 @@
 package com.lin.mimo360.t_bone;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,7 +40,7 @@ public class MainFragment extends Fragment {
     List<String> strlist = new ArrayList<>();
     List<ParseObject> bittodos = new ArrayList<>();
     List<Bitmap> bitmaptodolist = new ArrayList<>();
-
+    ProgressDialog pD;
 
 
     public MainFragment() {
@@ -68,7 +69,7 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Task task = new Task();
         task.execute();
-
+        pD = ProgressDialog.show(getActivity(),"訊息","資料讀取中,請稍後");
 
     }
 
@@ -93,7 +94,7 @@ public class MainFragment extends Fragment {
                 for(ParseObject p : bittodos){
                     ParseFile parseFile = (ParseFile)p.get("image01");
                     byte[] bytes = parseFile.getData();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,80,60,false);
                     bitmaptodolist.add(bitmap1);
                 }
@@ -120,6 +121,7 @@ public class MainFragment extends Fragment {
             //setdata();
             myAdapter = new MyAdapter(getActivity(), strlist, bitmaptodolist);
             rv.setAdapter(myAdapter);
+            pD.dismiss();
         }
     }
 
