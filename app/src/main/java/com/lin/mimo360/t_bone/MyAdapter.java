@@ -17,6 +17,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,29 +28,27 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     Context context;
     List<Integer> heights;
-    List<ParseObject> parseObjectList = new ArrayList<>();
-    List<Bitmap> bitmapList = new ArrayList<>();
-    List<String> stringList = new ArrayList<>();
+    List<ParseObject> parseObjects = new ArrayList<ParseObject>();
 
 
 
 
 
-    public MyAdapter(Context context, List<String> stringList, List<Bitmap> bitmapList) {
+    public MyAdapter(Context context, List<ParseObject>parseObjects) {
         this.context = context;
-        //this.parseObjectList = parseObjectList;
-        this.bitmapList = bitmapList;
-        this.stringList = stringList;
-        getRandomHeight(this.stringList);
+        this.parseObjects = parseObjects;
+        getRandomHeight(this.parseObjects);
+
+
 
 
     }
 
 
 
-    private void getRandomHeight(List<String> stringList){
+    private void getRandomHeight(List<ParseObject>parseObjects){
         heights = new ArrayList<>();
-        for (int i=0; i<=stringList.size(); i++){
+        for (int i=0; i<=parseObjects.size(); i++){
             heights.add((int) (400 + Math.random() * 150));
         }
     }
@@ -69,8 +68,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
         params.height = heights.get(position);
         vh.itemView.setLayoutParams(params);
 
-            vh.imageView.setImageBitmap(bitmapList.get(position));
-            vh.textView.setText(stringList.get(position));
+
+            //vh.imageView.setImageBitmap(bitmapList.get(position));
+            vh.textView.setText(parseObjects.get(position).getString("name"));
 
 
 
@@ -78,7 +78,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
 
     @Override
     public int getItemCount() {
-        return stringList.size();
+        return parseObjects.size();
     }
 
     public static class ViewHoider extends RecyclerView.ViewHolder{

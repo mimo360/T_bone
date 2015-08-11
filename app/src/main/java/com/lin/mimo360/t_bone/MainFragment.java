@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -39,8 +40,9 @@ public class MainFragment extends Fragment {
     List<ParseObject> todos = new ArrayList<>();
     List<String> strlist = new ArrayList<>();
     List<ParseObject> bittodos = new ArrayList<>();
-    List<Bitmap> bitmaptodolist = new ArrayList<>();
+    List<Bitmap>bitmaps = new ArrayList<>();
     ProgressDialog pD;
+
 
 
     public MainFragment() {
@@ -67,6 +69,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
         Task task = new Task();
         task.execute();
         pD = ProgressDialog.show(getActivity(),"訊息","資料讀取中,請稍後");
@@ -79,28 +83,20 @@ public class MainFragment extends Fragment {
             ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
             try {
                 todos = parseQuery.find();
-                for(ParseObject p : todos) {
-                    String s = p.getString("name");
-                    strlist.add(s);
-                }
+
+
+
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            ParseQuery<ParseObject> parseQuery1 = ParseQuery.getQuery("menuitem");
-            try {
-                bittodos = parseQuery1.find();
-                for(ParseObject p : bittodos){
-                    ParseFile parseFile = (ParseFile)p.get("image01");
-                    byte[] bytes = parseFile.getData();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,80,60,false);
-                    bitmaptodolist.add(bitmap1);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+
+
+
+
+
+
 
 
             return null;
@@ -119,7 +115,12 @@ public class MainFragment extends Fragment {
             //lm = new LinearLayoutManager(getActivity());
             rv.setLayoutManager(lm);
             //setdata();
-            myAdapter = new MyAdapter(getActivity(), strlist, bitmaptodolist);
+            myAdapter = new MyAdapter(getActivity(), todos);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             rv.setAdapter(myAdapter);
             pD.dismiss();
         }

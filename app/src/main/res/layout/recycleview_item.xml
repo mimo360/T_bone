@@ -23,7 +23,7 @@
         android:layout_height="0dp"
         android:layout_weight="5"
         android:id="@+id/icon"
-        android:src="@drawable/ic_01"
+
         android:scaleType="centerCrop"
         android:layout_gravity="center_vertical" />
 <LinearLayout

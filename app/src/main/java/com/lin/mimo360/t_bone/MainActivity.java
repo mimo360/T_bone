@@ -1,5 +1,8 @@
 package com.lin.mimo360.t_bone;
 
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,8 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -36,15 +41,21 @@ public class MainActivity extends AppCompatActivity {
     private MainFragment mf = null;
     private AboutFragment af = null;
     private MoneyCardFragment moneyCardFragment = null;
+    public List<Bitmap> bitmapList = new ArrayList<>();
+    public  static List<String>stringList =new ArrayList<>();
+    ProgressDialog pD;
+    String ss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         settoolbar();
-
         setFragment(mf);
         setnavigation();
+        new task().execute();
+        pD = ProgressDialog.show(this, "訊息", "下載資料中,請稍等");
+
         //test();
        //setupFab();
        // setTab();
@@ -95,7 +106,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public class task extends AsyncTask{
+        @Override
+        protected Object doInBackground(Object[] params) {
+            ParseQuery<ParseObject> parseQuery1 = ParseQuery.getQuery("menuitem");
+            try {
+                todos = parseQuery1.find();
+                for (ParseObject p : todos) {
+                    ss = p.getObjectId();
+                    stringList.add(ss);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            TextView textView = (TextView)findViewById(R.id.textView3);
+            textView.setText(stringList.get(6));
+            pD.dismiss();
+
+        }
+    }
 
 
     private void setFragment(Fragment fragment) {
