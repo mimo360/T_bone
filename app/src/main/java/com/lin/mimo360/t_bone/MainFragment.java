@@ -23,6 +23,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class MainFragment extends Fragment {
     RecyclerView.LayoutManager lm;
     List<ParseObject> todos = new ArrayList<>();
     List<String> strlist = new ArrayList<>();
-    List<Bitmap> bitmapList = new ArrayList<>();
-
+    List<ParseObject> bittodos = new ArrayList<>();
+    List<Bitmap> bitmaptodolist = new ArrayList<>();
 
 
 
@@ -86,6 +87,19 @@ public class MainFragment extends Fragment {
                 e.printStackTrace();
             }
 
+            ParseQuery<ParseObject> parseQuery1 = ParseQuery.getQuery("menuitem");
+            try {
+                bittodos = parseQuery1.find();
+                for(ParseObject p : bittodos){
+                    ParseFile parseFile = (ParseFile)p.get("image01");
+                    byte[] bytes = parseFile.getData();
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap,80,60,false);
+                    bitmaptodolist.add(bitmap1);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
 
             return null;
@@ -104,7 +118,7 @@ public class MainFragment extends Fragment {
             //lm = new LinearLayoutManager(getActivity());
             rv.setLayoutManager(lm);
             //setdata();
-            myAdapter = new MyAdapter(getActivity(), strlist);
+            myAdapter = new MyAdapter(getActivity(), strlist, bitmaptodolist);
             rv.setAdapter(myAdapter);
         }
     }

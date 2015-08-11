@@ -35,10 +35,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
 
 
 
-    public MyAdapter(Context context, List<String> stringList ) {
+    public MyAdapter(Context context, List<String> stringList, List<Bitmap> bitmapList) {
         this.context = context;
         //this.parseObjectList = parseObjectList;
-        //this.bitmapList = bitmapList;
+        this.bitmapList = bitmapList;
         this.stringList = stringList;
         getRandomHeight(this.stringList);
 
@@ -69,7 +69,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
         params.height = heights.get(position);
         vh.itemView.setLayoutParams(params);
 
-
+            vh.imageView.setImageBitmap(bitmapList.get(position));
             vh.textView.setText(stringList.get(position));
 
 
