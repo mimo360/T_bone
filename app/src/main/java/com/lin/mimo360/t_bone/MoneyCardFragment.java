@@ -45,28 +45,28 @@ public class MoneyCardFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
-        parseQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                TextView textView = (TextView)getView().findViewById(R.id.textView2);
-                textView.setText(list.get(0).getObjectId());
-            }
-        });
-
-//        parseQuery.getInBackground("NMSyKRZgoB", new GetCallback<ParseObject>() {
+//        parseQuery.findInBackground(new FindCallback<ParseObject>() {
 //            @Override
-//            public void done(ParseObject parseObject, ParseException e) {
-//                ParseFile i = (ParseFile)parseObject.get("image01");
-//                i.getDataInBackground(new GetDataCallback() {
-//                    @Override
-//                    public void done(byte[] bytes, ParseException e) {
-//                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0 , bytes.length);
-//                        ImageView imageView = (ImageView)getView().findViewById(R.id.imageView2);
-//                        imageView.setImageBitmap(bitmap);
-//
-//                    }
-//                });
+//            public void done(List<ParseObject> list, ParseException e) {
+//                TextView textView = (TextView)getView().findViewById(R.id.textView2);
+//                textView.setText(list.get(0).getObjectId());
 //            }
 //        });
+
+        parseQuery.getInBackground("NMSyKRZgoB", new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                ParseFile i = (ParseFile)parseObject.get("image01");
+                i.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] bytes, ParseException e) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0 , bytes.length);
+                        ImageView imageView = (ImageView)getView().findViewById(R.id.imageView2);
+                        imageView.setImageBitmap(bitmap);
+
+                    }
+                });
+            }
+        });
     }
 }

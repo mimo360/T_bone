@@ -28,22 +28,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     Context context;
     List<Integer> heights;
     List<ParseObject> parseObjectList = new ArrayList<>();
+    List<Bitmap> bitmapList = new ArrayList<>();
+    List<String> stringList = new ArrayList<>();
 
 
 
 
-    public MyAdapter(Context context, List<ParseObject> parseObjectList) {
+
+    public MyAdapter(Context context, List<String> stringList ) {
         this.context = context;
-        this.parseObjectList = parseObjectList;
-        getRandomHeight(this.parseObjectList);
+        //this.parseObjectList = parseObjectList;
+        //this.bitmapList = bitmapList;
+        this.stringList = stringList;
+        getRandomHeight(this.stringList);
+
 
     }
 
 
 
-    private void getRandomHeight(List<ParseObject> parseObjectList){
+    private void getRandomHeight(List<String> stringList){
         heights = new ArrayList<>();
-        for (int i=0; i<=parseObjectList.size(); i++){
+        for (int i=0; i<=stringList.size(); i++){
             heights.add((int) (400 + Math.random() * 150));
         }
     }
@@ -64,15 +70,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
         vh.itemView.setLayoutParams(params);
 
 
-            vh.textView.setText(parseObjectList.get(position).getString("name"));
-            vh.textView1.setText(parseObjectList.get(position).getString("content"));
+            vh.textView.setText(stringList.get(position));
+
 
 
     }
 
     @Override
     public int getItemCount() {
-        return parseObjectList.size();
+        return stringList.size();
     }
 
     public static class ViewHoider extends RecyclerView.ViewHolder{

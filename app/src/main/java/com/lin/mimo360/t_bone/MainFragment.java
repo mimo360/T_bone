@@ -2,6 +2,8 @@ package com.lin.mimo360.t_bone;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -34,6 +36,7 @@ public class MainFragment extends Fragment {
     RecyclerView.LayoutManager lm;
     List<ParseObject> todos = new ArrayList<>();
     List<String> strlist = new ArrayList<>();
+    List<Bitmap> bitmapList = new ArrayList<>();
 
 
 
@@ -62,33 +65,49 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        rv = (RecyclerView)getView().findViewById(R.id.recycleview);
-        lm = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        rv.setLayoutManager(lm);
-        setdata();
-        myAdapter = new MyAdapter(getActivity(),todos);
-        rv.setAdapter(myAdapter);
+        Task task = new Task();
+        task.execute();
 
 
     }
 
-        private void setRV() {
-        rv = (RecyclerView) getActivity().findViewById(R.id.recycleview);
-        lm = new StaggeredGridLayoutManager(2,1);
-        //lm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(lm);
+    public class Task extends AsyncTask{
+        @Override
+        protected Object doInBackground(Object[] params) {
+            ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
+            try {
+                todos = parseQuery.find();
+                for(ParseObject p : todos) {
+                    String s = p.getString("name");
+                    strlist.add(s);
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Object[] values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            rv = (RecyclerView) getActivity().findViewById(R.id.recycleview);
+            lm = new StaggeredGridLayoutManager(1,1);
+            //lm = new LinearLayoutManager(getActivity());
+            rv.setLayoutManager(lm);
             //setdata();
-        myAdapter = new MyAdapter(getActivity(),todos);
-        rv.setAdapter(myAdapter);
-    }
-
-    private void setdata() {
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
-        try {
-            todos = parseQuery.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            myAdapter = new MyAdapter(getActivity(), strlist);
+            rv.setAdapter(myAdapter);
         }
     }
+
 
 }
