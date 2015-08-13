@@ -1,6 +1,7 @@
 package com.lin.mimo360.t_bone;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ProgressCallback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -44,21 +46,25 @@ public class MoneyCardFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
-        parseQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                ParseFile i = (ParseFile) list.get(0).get("image01");
-                i.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] bytes, ParseException e) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView2);
-                        imageView.setImageBitmap(bitmap);
-                    }
-                });
-            }
-        });
+        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView2);
+        Picasso.with(getActivity()).load("https://s3-us-west-2.amazonaws.com/tbont/ic_image016.jpg").into(imageView);
+
+//
+// seQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
+//        parseQuery.findInBackground(new FindCallback<ParseObject>() {
+//            @Override
+//            public void done(List<ParseObject> list, ParseException e) {
+//                ParseFile i = (ParseFile) list.get(0).get("image01");
+//                i.getDataInBackground(new GetDataCallback() {
+//                    @Override
+//                    public void done(byte[] bytes, ParseException e) {
+//                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView2);
+//                        imageView.setImageBitmap(bitmap);
+//                    }
+//                });
+//            }
+//        });
 
 //        parseQuery.getInBackground("NMSyKRZgoB", new GetCallback<ParseObject>() {
 //            @Override

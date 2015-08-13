@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -41,10 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private MainFragment mf = null;
     private AboutFragment af = null;
     private MoneyCardFragment moneyCardFragment = null;
-    public List<Bitmap> bitmapList = new ArrayList<>();
-    public  static List<String>stringList =new ArrayList<>();
+    public static List<String>stringList =new ArrayList<>();
+    public static List<Bitmap> bitmaps = new ArrayList<>();
     ProgressDialog pD;
     String ss;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setnavigation();
         new task().execute();
         pD = ProgressDialog.show(this, "訊息", "下載資料中,請稍等");
+
 
         //test();
        //setupFab();
@@ -109,13 +113,14 @@ public class MainActivity extends AppCompatActivity {
     public class task extends AsyncTask{
         @Override
         protected Object doInBackground(Object[] params) {
-            ParseQuery<ParseObject> parseQuery1 = ParseQuery.getQuery("menuitem");
+            ParseQuery<ParseObject> parseQuery1 = ParseQuery.getQuery("itemId");
             try {
                 todos = parseQuery1.find();
                 for (ParseObject p : todos) {
-                    ss = p.getObjectId();
+                    ss = p.getString("name");
                     stringList.add(ss);
                 }
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -125,9 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            TextView textView = (TextView)findViewById(R.id.textView3);
-            textView.setText(stringList.get(6));
+
             pD.dismiss();
 
         }

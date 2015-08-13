@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,15 +13,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableMap;
 
 /**
  * Created by mimo360 on 2015/7/21.
@@ -28,15 +33,19 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     Context context;
     List<Integer> heights;
-    List<ParseObject> parseObjects = new ArrayList<ParseObject>();
+    List<ParseObject> parseObjects = new ArrayList<>() ;
+    public List<String> id = null;
+   List<Bitmap> bitmaps = new ArrayList<>();
+    Bitmap bitmap;
+
+    ParseFile i = null;
 
 
 
-
-
-    public MyAdapter(Context context, List<ParseObject>parseObjects) {
+    public MyAdapter(Context context, List<ParseObject> po) {
         this.context = context;
-        this.parseObjects = parseObjects;
+        this.parseObjects = po;
+
         getRandomHeight(this.parseObjects);
 
 
@@ -46,7 +55,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
 
 
 
-    private void getRandomHeight(List<ParseObject>parseObjects){
+
+    private void getRandomHeight(List<ParseObject> parseObjects){
         heights = new ArrayList<>();
         for (int i=0; i<=parseObjects.size(); i++){
             heights.add((int) (400 + Math.random() * 150));
@@ -62,15 +72,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     }
 
     @Override
-    public void onBindViewHolder(final ViewHoider vh, final int position) {
+    public void onBindViewHolder(final ViewHoider vh,int position) {
 
         ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
         params.height = heights.get(position);
         vh.itemView.setLayoutParams(params);
 
 
-            //vh.imageView.setImageBitmap(bitmapList.get(position));
-            vh.textView.setText(parseObjects.get(position).getString("name"));
+
+
+                vh.imageView.setImageBitmap(bitmap);
+                vh.textView.setText(parseObjects.get(position).getObjectId());
+
+
+
 
 
 
@@ -78,13 +93,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
 
     @Override
     public int getItemCount() {
-        return parseObjects.size();
+        return MainActivity.stringList.size();
     }
+
+   public class task extends AsyncTask{
+
+       @Override
+       protected Object doInBackground(Object[] params) {
+           return null;
+       }
+   }
+
+
+
 
     public static class ViewHoider extends RecyclerView.ViewHolder{
         private  TextView textView, textView1;
         private ImageView imageView;
+        public  int position;
         public ViewHoider(View view){
+
             super(view);
             textView = (TextView)view.findViewById(R.id.item1);
             textView1 = (TextView)view.findViewById(R.id.item2);

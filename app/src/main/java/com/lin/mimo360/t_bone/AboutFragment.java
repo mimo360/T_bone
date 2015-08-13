@@ -1,6 +1,7 @@
 package com.lin.mimo360.t_bone;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,12 +14,14 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.security.ProtectionDomain;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AboutFragment extends Fragment {
-
+    ProgressDialog pd;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -35,10 +38,13 @@ public class AboutFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         setParse();
+
     }
 
     private void setParse() {
+        pd = ProgressDialog.show(getActivity(),"訊息","下載中");
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("about");
         parseQuery.getInBackground("BEszgYXCLU", new GetCallback<ParseObject>() {
             @Override
@@ -51,6 +57,6 @@ public class AboutFragment extends Fragment {
 
             }
         });
-
+        pd.dismiss();
     }
 }
