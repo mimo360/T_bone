@@ -1,6 +1,7 @@
 package com.lin.mimo360.t_bone;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -17,17 +18,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.allpay.tw.mobilesdk.CreateTrade;
+import com.allpay.tw.mobilesdk.ENVIRONMENT;
+import com.allpay.tw.mobilesdk.PAYMENTTYPE;
+import com.allpay.tw.mobilesdk.PaymentActivity;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private AboutFragment af = null;
     private MoneyCardFragment moneyCardFragment = null;
     public static List<String>stringList =new ArrayList<>();
+    public static List<String>stridlist = new ArrayList<>();
     public static List<Bitmap> bitmaps = new ArrayList<>();
     ProgressDialog pD;
     String ss;
@@ -59,7 +68,51 @@ public class MainActivity extends AppCompatActivity {
         new task().execute();
         pD = ProgressDialog.show(this, "訊息", "下載資料中,請稍等");
 
+        Button button = (Button)findViewById(R.id.button2);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PAYMENTTYPE paymentType = null;
+                Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
+                paymentType = PAYMENTTYPE.CREDIT;
+                CreateTrade oCreateTrade = new CreateTrade(
+                        Config.MerchantID_test,                //廠商編號
+                        Config.AppCode_test,                //App代碼
+                        Config.getMerchantTradeNo(),        //廠商交易編號
+                        Config.getMerchantTradeDate(),        //廠商交易時間
+                        Config.TotalAmount_test,            //交易金額
+                        Config.TradeDesc_test,                //交易描述
+                        Config.ItemName_test,                //商品名稱
+                        paymentType,                        //預設付款方式
+                        ENVIRONMENT.STAGE);                //介接環境 : STAGE為測試，OFFICIAL為正式
+                intent.putExtra(PaymentActivity.EXTRA_PAYMENT, oCreateTrade);
+                startActivityForResult(intent, Config.REQUEST_CODE);
 
+
+            }
+        });
+
+
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                ParseQuery query = ParseQuery.getQuery("itemId");
+                try {
+                    List<ParseObject> s = query.find();
+
+                    for (ParseObject pq : s){
+                        String str = pq.getString("url");
+                        stridlist.add(str);
+                    }
+
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        runOnUiThread(r);
         //test();
        //setupFab();
        // setTab();
@@ -90,11 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
                         break;
                     case R.id.navigation_item_2:
-                        moneyCardFragment = new MoneyCardFragment();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.flay, moneyCardFragment,"MoneyCardFragment")
-                                .addToBackStack(null)
-                                .commit();
+
 
                         break;
                     case R.id.navigation_item_3:
@@ -104,6 +153,12 @@ public class MainActivity extends AppCompatActivity {
                                 .addToBackStack(null)
                                 .commit();
                         break;
+                    case R.id.navigation_item_4:
+                        moneyCardFragment = new MoneyCardFragment();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.flay, moneyCardFragment,"MoneyCardFragment")
+                                .addToBackStack(null)
+                                .commit();
                 }
                 return true;
             }
@@ -199,4 +254,21 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+//			super.onActivityResult(requestCode, resultCode, data);
+        Log.d(Config.LOGTAG, "requestCode=" + requestCode + " , resultCode=" + resultCode);
+        if (requestCode == Config.REQUEST_CODE) {
+            if (resultCode == PaymentActivity.RESULT_EXTRAS_NULL) {
+                Log.d(Config.LOGTAG, "EXTRA_PAYMENT is NULL ");
+            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_CANCEL) {
+
+                Log.d(Config.LOGTAG, "The user canceled.");
+            }
+        }
+
+    }
+
+
 }

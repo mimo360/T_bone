@@ -36,16 +36,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     List<ParseObject> parseObjects = new ArrayList<>() ;
     public List<String> id = null;
    List<Bitmap> bitmaps = new ArrayList<>();
+    List<String> idList = new ArrayList<>();
     Bitmap bitmap;
 
     ParseFile i = null;
 
 
 
-    public MyAdapter(Context context, List<ParseObject> po) {
+    public MyAdapter(Context context, List<ParseObject> po, List<String> idList) {
         this.context = context;
         this.parseObjects = po;
-
+        this.idList = idList;
         getRandomHeight(this.parseObjects);
 
 
@@ -81,8 +82,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
 
 
 
-                vh.imageView.setImageBitmap(bitmap);
-                vh.textView.setText(parseObjects.get(position).getObjectId());
+                Picasso.with(context).load(parseObjects.get(position).getString("url1")).into(vh.imageView);
+                vh.textView.setText(parseObjects.get(position).getString("name"));
 
 
 
@@ -96,13 +97,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
         return MainActivity.stringList.size();
     }
 
-   public class task extends AsyncTask{
-
-       @Override
-       protected Object doInBackground(Object[] params) {
-           return null;
-       }
-   }
 
 
 
@@ -110,7 +104,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHoider> {
     public static class ViewHoider extends RecyclerView.ViewHolder{
         private  TextView textView, textView1;
         private ImageView imageView;
-        public  int position;
         public ViewHoider(View view){
 
             super(view);

@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     RecyclerView rv;
     MyAdapter myAdapter;
     RecyclerView.LayoutManager lm;
-
+     List<String> stringList;
 
     List<Bitmap> bitmaps = new ArrayList<>();
     ProgressDialog pD;
@@ -72,8 +72,30 @@ public class MainFragment extends Fragment {
         lm = new StaggeredGridLayoutManager(2, 1);
         rv.setLayoutManager(lm);
         MyApplication myApplication = (MyApplication) getActivity().getApplicationContext();
-        myAdapter = new MyAdapter(getActivity(), myApplication.parseObjects);
+        myAdapter = new MyAdapter(getActivity(), myApplication.parseObjects,MainActivity.stridlist);
         rv.setAdapter(myAdapter);
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                ParseQuery query = ParseQuery.getQuery("itemId");
+                try {
+                    List<ParseObject> s = query.find();
+
+                    for (ParseObject pq : s){
+                        String str = pq.getString("name");
+                        stringList.add(str);
+                    }
+                    myAdapter.notifyDataSetChanged();
+
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
 
 
         pD.dismiss();

@@ -2,27 +2,24 @@ package com.lin.mimo360.t_bone;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ProgressCallback;
-import com.squareup.picasso.Picasso;
+import com.allpay.tw.mobilesdk.CreateTrade;
+import com.allpay.tw.mobilesdk.ENVIRONMENT;
+import com.allpay.tw.mobilesdk.PAYMENTTYPE;
+import com.allpay.tw.mobilesdk.PaymentActivity;
 
-import java.util.List;
 
 
 /**
@@ -46,40 +43,53 @@ public class MoneyCardFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView2);
-        Picasso.with(getActivity()).load("https://s3-us-west-2.amazonaws.com/tbont/ic_image016.jpg").into(imageView);
 
-//
-// seQuery<ParseObject> parseQuery = ParseQuery.getQuery("menuitem");
-//        parseQuery.findInBackground(new FindCallback<ParseObject>() {
-//            @Override
-//            public void done(List<ParseObject> list, ParseException e) {
-//                ParseFile i = (ParseFile) list.get(0).get("image01");
-//                i.getDataInBackground(new GetDataCallback() {
-//                    @Override
-//                    public void done(byte[] bytes, ParseException e) {
-//                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView2);
-//                        imageView.setImageBitmap(bitmap);
-//                    }
-//                });
-//            }
-//        });
+        Button button = (Button)getView().findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PAYMENTTYPE paymentType = null;
+                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                paymentType = PAYMENTTYPE.CREDIT;
+                CreateTrade oCreateTrade = new CreateTrade(
+                        Config.MerchantID_test,                //廠商編號
+                        Config.AppCode_test,                //App代碼
+                        Config.getMerchantTradeNo(),        //廠商交易編號
+                        Config.getMerchantTradeDate(),        //廠商交易時間
+                        Config.TotalAmount_test,            //交易金額
+                        Config.TradeDesc_test,                //交易描述
+                        Config.ItemName_test,                //商品名稱
+                        paymentType,                        //預設付款方式
+                        ENVIRONMENT.STAGE);                //介接環境 : STAGE為測試，OFFICIAL為正式
+                intent.putExtra(PaymentActivity.EXTRA_PAYMENT, oCreateTrade);
+                startActivityForResult(intent, Config.REQUEST_CODE);
 
-//        parseQuery.getInBackground("NMSyKRZgoB", new GetCallback<ParseObject>() {
-//            @Override
-//            public void done(ParseObject parseObject, ParseException e) {
-//                ParseFile i = (ParseFile)parseObject.get("image01");
-//                i.getDataInBackground(new GetDataCallback() {
-//                    @Override
-//                    public void done(byte[] bytes, ParseException e) {
-//                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0 , bytes.length);
-//                        ImageView imageView = (ImageView)getView().findViewById(R.id.imageView2);
-//                        imageView.setImageBitmap(bitmap);
-//
-//                    }
-//                });
-//            }
-//        });
+
+            }
+        });
+
+
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+//			super.onActivityResult(requestCode, resultCode, data);
+        Log.d(Config.LOGTAG, "requestCode=" + requestCode + " , resultCode=" + resultCode);
+        if (requestCode == Config.REQUEST_CODE) {
+            if (resultCode == PaymentActivity.RESULT_EXTRAS_NULL) {
+                Log.d(Config.LOGTAG, "EXTRA_PAYMENT is NULL ");
+            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_CANCEL) {
+                TextView textView = (TextView)getView().findViewById(R.id.textView2);
+                textView.setText("用戶取消");
+                Log.d(Config.LOGTAG, "The user canceled.");
+            }
         }
+
+    }
+
+
+
+
+
 }
